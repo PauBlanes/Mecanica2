@@ -34,7 +34,7 @@ namespace Sphere {
 	extern void drawSphere();
 }
 
-extern float *partVerts;
+extern float *partVerts; //algo falla
 
 
 extern float gravity;
