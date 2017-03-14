@@ -37,9 +37,6 @@ namespace Sphere {
 extern float *partVerts;
 
 
-enum solverMethod { euler, verlet };
-struct coords { float x;float y;float z; };
-enum emiterType {font, cascada};
 extern float gravity;
 
 class Particle {
@@ -55,16 +52,15 @@ class Particle {
 	float elasticCoef;
 	float frictionCoef;	
 
-	float lifeCounter;
-
+	
 	
 public:
-	float particleLife;
+	
 	Particle(vec3 pos, vec3 initAcc, float laMassa, float eC, float fC);
 	
 	void Move(float dt);
-	void DetectWall(coords n, int d, float dt);
-	void DetectSphere(coords pos, float radius, float dt);
+	void DetectWall(vec3 n, int d, float dt);
+	void DetectSphere(vec3 pos, float radius, float dt);
 	
 };
 
@@ -73,22 +69,13 @@ class particleManager {
 
 	float spawnCounter;
 	
-public:
-	int emitterRate;
-	coords pos1; //posicio del emissor
-	coords pos2; //posicio del emissor per cascada
-	coords dir; //vector de velocitat inicial de les particules
-	emiterType eType; //tipus d'emissor
-	float particleLife;
-	solverMethod partsMethod;
+public:	
 	float elasticCoef;
 	float frictionCoef;
-	float fontAngle; //l'angle amb que surten les particules a la font
-
-	coords wallNormals[6];
+	
+	vec3 wallNormals[6];
 	int wallDs[6];
 	std::vector<Particle> particles;
-	void SpawnParticles(emiterType spawnType);
 	void Update(float dt);
 	
 };
