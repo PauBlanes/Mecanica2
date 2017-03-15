@@ -1,9 +1,9 @@
 ﻿
 #include "myClasses.h"
 
-float gravity;
+
 int NumPrticles = 0;
-Particle::Particle(vec3 pos, vec3 initAcc, float laMassa, float eC, float fC) {
+Particle::Particle(vec3 pos, float laMassa, float eC, float fC) {
 	
 		
 	position = pos;	
@@ -11,15 +11,11 @@ Particle::Particle(vec3 pos, vec3 initAcc, float laMassa, float eC, float fC) {
 	velocity = {0,0,0};
 	mass = laMassa;
 
-	//calculem la forca
-	acc.x = initAcc.x;
-	acc.y = gravity + initAcc.y;
-	acc.z = initAcc.z;
-
-	force.x = mass*acc.x;
-	force.y = mass*acc.y;
-	force.z = mass*acc.z;
-
+	//calculem les forces inicials
+	acc.y = gravity;
+	force = mass*acc;
+	
+	//posem els coeficients
 	elasticCoef = eC;
 	frictionCoef = fC;
 
@@ -31,12 +27,11 @@ void Particle::Move(float dt) {
 		//noves posicions
 		position += velocity*dt;
 		
-		//sumem acceleracions que ens dona l'emissor o en el cas d'un camp de for鏰
-		velocity += dt*(force / mass);			
+		//calculem velocitats
+		velocity += dt*(force / mass);	
 	
-	
-	//recalculem forces per si han canviat
-	force = mass*acc;
+		//calculem forces
+		force = mass*acc;
 	
 }
 void Particle::DetectWall(vec3 n, int d, float dt) {
@@ -63,33 +58,26 @@ void Particle::DetectWall(vec3 n, int d, float dt) {
 void Particle::DetectSphere(vec3 centreEsfera, float radius, float dt) {
 	//calculem quina seria la seva seguent posicio
 	vec3 posCreuada = position + dt*velocity;;
-	//colisio per metode euler
-	vec3 l = normalize(velocity); //normalitzem velocitat per fer la linia que surt de PosActual i va en dir de la velocitat
-	float d = -dot(l, (position - centreEsfera)) + sqrt((dot(l, (position - centreEsfera)))*(dot(l, (position - centreEsfera))) - ((normalize(position - centreEsfera))*(normalize(position - centreEsfera))) + (radius*radius));
+	
 	vec3 distVector = posCreuada - centreEsfera;
-		float dist = sqrt((distVector.x*distVector.x)+ (distVector.y*distVector.y)+ (distVector.z*distVector.z));
-		if (dist < radius) {
-			//std::cout << "CollShpere" << std::endl;
-			//trobar punt d'interseccio -- wikipedia line-sphere intersection
-			//vector interseccio-centre
-			//normalitzar i aixo es la normal
-			vec3 n = { distVector.x / dist, distVector.y / dist, distVector.z / dist };
-			float VperN = (n.x*velocity.x) + (n.y*velocity.y) + (n.z*velocity.z); // v*n
-																				  //elasticidad
-			velocity.x += -(1 + elasticCoef)*(n.x*VperN);
-			velocity.y += -(1 + elasticCoef)*(n.y*VperN);
-			velocity.z += -(1 + elasticCoef)*(n.z*VperN);
-			//friccion
-			vec3 vN;
-			vN.x = VperN*n.x;
-			vN.y = VperN*n.y;
-			vN.z = VperN*n.z;
-			velocity.x += -frictionCoef * (velocity.x - vN.x); //-u*vT
-			velocity.y += -frictionCoef * (velocity.y - vN.y);
-			velocity.z += -frictionCoef * (velocity.z - vN.z);
+	float dist = length(distVector);
+		if (dist < radius) {			
+			//trobar punt d'interseccio
+			vec3 l = normalize(velocity); //normalitzem velocitat per fer la linia que surt de PosActual i va en dir de la velocitat
+			float d = -dot(l, (position - centreEsfera)) + sqrt((dot(l, (position - centreEsfera)))*(dot(l, (position - centreEsfera))) - ((length(position - centreEsfera))*(length(position - centreEsfera))) + (radius*radius));
+			vec3 intersectionPoint = position + l*d;
+			//vector interseccio-centre sera la normal del pla
+			vec3 n = intersectionPoint - centreEsfera;
+
+			//elasticitat
+			float VperN = dot (n, velocity); // v*n
+			velocity += -(1 + elasticCoef)*(n*VperN);
 			
-		}
-		
+			//friccion
+			vec3 vN = VperN*n;			
+			velocity += -frictionCoef * (velocity - vN); //velocity = velocity -u*vT
+						
+		}		
 }
 
 

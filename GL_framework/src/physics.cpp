@@ -1,6 +1,6 @@
 #include <imgui\imgui.h>
 #include <imgui\imgui_impl_glfw_gl3.h>
-
+#include "myClasses.h"
 /*
 TASK
 1. Simulation of the whole mesh using your solver of choice (Euler or Verlet). (4pt)

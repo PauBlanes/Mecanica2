@@ -34,10 +34,8 @@ namespace Sphere {
 	extern void drawSphere();
 }
 
-extern float *partVerts; //algo falla
-
-
-extern float gravity;
+float *partVerts;
+float gravity = -9.8;
 
 class Particle {
 	friend class particleManager;
@@ -56,7 +54,7 @@ class Particle {
 	
 public:
 	
-	Particle(vec3 pos, vec3 initAcc, float laMassa, float eC, float fC);
+	Particle(vec3 pos, float laMassa, float eC, float fC);
 	
 	void Move(float dt);
 	void DetectWall(vec3 n, int d, float dt);
