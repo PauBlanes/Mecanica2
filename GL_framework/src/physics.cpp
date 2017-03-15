@@ -23,6 +23,9 @@ TASK
 	 Max % of accepted ellongation of links.
 	 Initial Rest distance of the springs between the points of the mesh.
 */
+
+particleManager pM;
+
 bool show_test_window = false;
 void GUI() {
 	{	//FrameRate
@@ -37,6 +40,7 @@ void GUI() {
 		ImGui::ShowTestWindow(&show_test_window);
 	}
 }
+
 
 void PhysicsInit() {
 	//TODO
