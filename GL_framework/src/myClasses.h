@@ -23,8 +23,7 @@ namespace LilSpheres {
 	extern void setupParticles(int numTotalParticles, float radius = 0.05f);
 	extern void cleanupParticles();
 	extern void updateParticles(int startIdx, int count, float* array_data);
-	extern void drawParticles(int startIdx, int count);
-
+	extern void drawParticles(int startIdx, int count);	
 
 }
 namespace Sphere {
@@ -34,8 +33,8 @@ namespace Sphere {
 	extern void drawSphere();
 }
 
-float* partVerts = new float [LilSpheres::maxParticles];
-float gravity = -9.8;
+extern float* partVerts;
+extern float gravity;
 
 class Particle {
 	friend class particleManager;
@@ -69,7 +68,7 @@ class particleManager {
 public:	
 	float elasticCoef;
 	float frictionCoef;
-	
+		
 	vec3 wallNormals[6];
 	int wallDs[6];
 	std::vector<Particle> particles;

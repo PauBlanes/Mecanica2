@@ -3,7 +3,10 @@
 
 
 int NumPrticles = 0;
+
 float gravity = -9.8;
+float* partVerts = new float[LilSpheres::maxParticles * 3];
+
 Particle::Particle(vec3 pos, float laMassa, float eC, float fC) {
 	
 		
