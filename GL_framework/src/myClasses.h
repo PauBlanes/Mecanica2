@@ -18,9 +18,6 @@ extern bool renderSphere;
 extern bool renderParticles;
 using namespace glm;
 
-float *partVerts;
-
-
 namespace LilSpheres {
 	extern const int maxParticles;
 	extern void setupParticles(int numTotalParticles, float radius = 0.05f);
@@ -37,6 +34,8 @@ namespace Sphere {
 	extern void drawSphere();
 }
 
+float* partVerts = new float [LilSpheres::maxParticles];
+float gravity = -9.8;
 
 class Particle {
 	friend class particleManager;
@@ -66,8 +65,7 @@ public:
 
 class particleManager {
 
-	float spawnCounter;
-	
+		
 public:	
 	float elasticCoef;
 	float frictionCoef;
