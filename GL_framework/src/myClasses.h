@@ -34,6 +34,13 @@ namespace Sphere {
 	extern void drawSphere();
 }
 
+namespace ClothMesh {
+	extern void setupClothMesh();
+	extern void cleanupClothMesh();
+	extern void updateClothMesh(float* array_data);
+	extern void drawClothMesh();
+}
+
 extern float* partVerts;
 extern float gravity;
 

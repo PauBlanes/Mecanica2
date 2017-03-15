@@ -45,7 +45,7 @@ void Particle::DetectWall(vec3 n, int d, float dt) {
 	
 	//si estan una a cada banda del pla fem el rebot
 	if ((dot(n,position) + d) * (dot(n,posCreuada) + d) <= 0) {
-		
+		std::cout << "coll" << std::endl;
 		//calculem la nova posicio
 		position = posCreuada - 2 * (dot(n, posCreuada) + d)*n;
 
@@ -68,10 +68,12 @@ void Particle::DetectSphere(vec3 centreEsfera, float radius, float dt) {
 		if (dist < radius) {			
 			//trobar punt d'interseccio
 			vec3 l = normalize(velocity); //normalitzem velocitat per fer la linia que surt de PosActual i va en dir de la velocitat
-			float d = -dot(l, (position - centreEsfera)) + sqrt((dot(l, (position - centreEsfera)))*(dot(l, (position - centreEsfera))) - ((length(position - centreEsfera))*(length(position - centreEsfera))) + (radius*radius));
-			vec3 intersectionPoint = position + l*d;
+			float distIntersec = -dot(l, (position - centreEsfera)) + sqrt((dot(l, (position - centreEsfera)))*(dot(l, (position - centreEsfera))) - ((length(position - centreEsfera))*(length(position - centreEsfera))) + (radius*radius));
+			vec3 intersectionPoint = position + l*distIntersec;
 			//vector interseccio-centre sera la normal del pla
 			vec3 n = intersectionPoint - centreEsfera;
+
+			//calcular d del pla i pos de rebot
 
 			//elasticitat
 			float VperN = dot (n, velocity); // v*n
@@ -92,6 +94,11 @@ void particleManager::Update(float dt) {
 	//actualitzar el array de vertexs
 	for (int i = 0; i < particles.size(); ++i) {
 		
+		for (int j = 0; j < 6;j++) {
+			particles[i].DetectWall(wallNormals[j], wallDs[j], dt);
+		}
+		
+
 		particles[i].Move(dt);
 		
 		particles[i].elasticCoef = elasticCoef;
@@ -101,10 +108,10 @@ void particleManager::Update(float dt) {
 		partVerts[i * 3 + 1] = particles[i].position.y;
 		partVerts[i * 3 + 2] = particles[i].position.z;
 				
-
+		
 	}	
-
-	LilSpheres::updateParticles(0, particles.size(), partVerts);
+	ClothMesh::updateClothMesh(partVerts);
+	//LilSpheres::updateParticles(0, particles.size(), partVerts);
 
 	
 }
