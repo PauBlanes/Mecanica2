@@ -29,58 +29,44 @@ void Particle::Move(float dt) {
 	
 				
 		//noves posicions
-		position.x += dt*velocity.x;
-		position.y += dt*velocity.y;
-		position.z += dt*velocity.z;
+		position += velocity*dt;
 		
 		//sumem acceleracions que ens dona l'emissor o en el cas d'un camp de for鏰
-		velocity.x += dt*(force.x / mass);
-		velocity.y += dt*(force.y / mass);
-		velocity.z += dt*(force.z / mass);
-				
+		velocity += dt*(force / mass);			
 	
 	
 	//recalculem forces per si han canviat
-	force.x = mass*acc.x;
-	force.y = mass*acc.y;
-	force.z = mass*acc.z;
+	force = mass*acc;
+	
 }
 void Particle::DetectWall(vec3 n, int d, float dt) {
+	
 	//calculem quina seria la seva seguent posicio
-	vec3 posCreuada = { 0,0,0 };
-	//colisio per metode euler
-	//AMB PUNT I PUNT PROJECTAT CALCULAR LA POS ON ESTARA DESPRES DEL REBOT
-	posCreuada.x = position.x + dt*velocity.x;
-	posCreuada.y = position.y + dt*velocity.y;
-	posCreuada.z = position.z + dt*velocity.z;
+	vec3 posCreuada = position + dt*velocity;
+	
+	//si estan una a cada banda del pla fem el rebot
+	if ((dot(n,position) + d) * (dot(n,posCreuada) + d) <= 0) {
+		
+		//calculem la nova posicio
+		position = posCreuada - 2 * (dot(n, posCreuada) + d)*n;
 
-	//el rebot
-	if ((n.x*position.x + n.y*position.y + n.z*position.z + d) * (n.x*posCreuada.x + n.y*posCreuada.y + n.z*posCreuada.z + d) <= 0) {
-		//std::cout << "colisio" << std::endl;
-		float VperN = (n.x*velocity.x) + (n.y*velocity.y) + (n.z*velocity.z); // v*n
+		//calculem la nova velocitat
+		float VperN = dot(velocity, n); // v*n
 		//elasticidad
-		velocity.x += -(1 + elasticCoef)*(n.x*VperN);
-		velocity.y += -(1 + elasticCoef)*(n.y*VperN);
-		velocity.z += -(1 + elasticCoef)*(n.z*VperN);
+		velocity += -(1 + elasticCoef)*(n*VperN);		
 		//friccion
-		vec3 vN;
-		vN.x = VperN*n.x;
-		vN.y = VperN*n.y;
-		vN.z = VperN*n.z;
-		velocity.x += -frictionCoef * (velocity.x - vN.x); //-u*vT
-		velocity.y += -frictionCoef * (velocity.y - vN.y);
-		velocity.z += -frictionCoef * (velocity.z - vN.z);
+		vec3 vN = VperN*n;
+		velocity += -frictionCoef * (velocity - vN); //-u*vT	
 
 	}
 }
-void Particle::DetectSphere(vec3 Pos, float radius, float dt) {
+void Particle::DetectSphere(vec3 centreEsfera, float radius, float dt) {
 	//calculem quina seria la seva seguent posicio
-	vec3 posCreuada = {0,0,0};
+	vec3 posCreuada = position + dt*velocity;;
 	//colisio per metode euler
-		posCreuada.x = position.x + dt*velocity.x;
-		posCreuada.y = position.y + dt*velocity.y;
-		posCreuada.z = position.z + dt*velocity.z;
-		vec3 distVector = { posCreuada.x - Pos.x, posCreuada.y - Pos.y, posCreuada.z - Pos.z };
+	vec3 l = normalize(velocity); //normalitzem velocitat per fer la linia que surt de PosActual i va en dir de la velocitat
+	float d = -dot(l, (position - centreEsfera)) + sqrt((dot(l, (position - centreEsfera)))*(dot(l, (position - centreEsfera))) - ((normalize(position - centreEsfera))*(normalize(position - centreEsfera))) + (radius*radius));
+	vec3 distVector = posCreuada - centreEsfera;
 		float dist = sqrt((distVector.x*distVector.x)+ (distVector.y*distVector.y)+ (distVector.z*distVector.z));
 		if (dist < radius) {
 			//std::cout << "CollShpere" << std::endl;

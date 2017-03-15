@@ -60,7 +60,7 @@ public:
 	
 	void Move(float dt);
 	void DetectWall(vec3 n, int d, float dt);
-	void DetectSphere(vec3 pos, float radius, float dt);
+	void DetectSphere(vec3 centreEsfera, float radius, float dt);
 	
 };
 
