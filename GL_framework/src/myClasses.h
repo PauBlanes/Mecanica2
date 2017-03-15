@@ -17,6 +17,7 @@
 extern bool renderSphere;
 extern bool renderParticles;
 using namespace glm;
+struct coords { float x; float y; float z; };
 
 namespace LilSpheres {
 	extern const int maxParticles;

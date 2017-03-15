@@ -27,13 +27,36 @@ TASK
 particleManager pM;
 
 bool show_test_window = false;
+//esfera
+static bool SphereCollider = true;
+static float SpherePos[3] = { 0.0f,1.0f,0.0f };
+static float SphereRad = 1.0f;
+coords spherePosition;
+float Second;
+
 void GUI() {
 	{	//FrameRate
 		ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 
 		//TODO
+		//Second = 1 / ImGui::GetIO();
 	}
 
+	//Colliders
+	if (ImGui::CollapsingHeader("Colliders"))
+	{
+		static bool SphereCollider = true;
+		ImGui::Checkbox("Use Sphere Collider", &SphereCollider);
+
+		//Sphere
+		if (SphereCollider) {
+			ImGui::DragFloat("position X", &SpherePos[0], 0.005f);
+			ImGui::DragFloat("position Y", &SpherePos[1], 0.005f);
+			ImGui::DragFloat("position Z", &SpherePos[2], 0.005f);
+			ImGui::DragFloat("Sphere Radius", &SphereRad, 0.005f);
+		}
+		
+	}
 	// ImGui test window. Most of the sample code is in ImGui::ShowTestWindow()
 	if(show_test_window) {
 		ImGui::SetNextWindowPos(ImVec2(650, 20), ImGuiSetCond_FirstUseEver);
@@ -47,6 +70,14 @@ void PhysicsInit() {
 }
 void PhysicsUpdate(float dt) {
 	//TODO
+	if (SphereCollider) {
+			renderSphere = true;
+			spherePosition.x = SpherePos[0];	spherePosition.y = SpherePos[1];	spherePosition.z = SpherePos[2];
+			Sphere::updateSphere(glm::vec3(SpherePos[0], SpherePos[1], SpherePos[2]), SphereRad);
+		}
+		else {
+			renderSphere = false;
+		}
 }
 void PhysicsCleanup() {
 	//TODO
