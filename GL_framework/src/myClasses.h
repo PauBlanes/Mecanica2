@@ -34,7 +34,7 @@ namespace Sphere {
 	extern void drawSphere();
 }
 
-float *partVerts;
+float* partVerts = new float [LilSpheres::maxParticles];
 float gravity = -9.8;
 
 class Particle {
@@ -65,8 +65,7 @@ public:
 
 class particleManager {
 
-	float spawnCounter;
-	
+		
 public:	
 	float elasticCoef;
 	float frictionCoef;
