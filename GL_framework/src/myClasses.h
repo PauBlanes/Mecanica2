@@ -43,7 +43,7 @@ class Particle {
 	vec3 velocity;
 	vec3 position;
 
-	float mass;
+	float mass; //hola
 	vec3 force;
 	vec3 acc;
 
