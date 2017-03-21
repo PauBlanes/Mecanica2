@@ -23,7 +23,7 @@ TASK
 	 Max % of accepted ellongation of links. //LO DE CORREGIR QUE CAU MOLT A SACO, EL RUBBERY DEFORMATION
 	 Initial Rest distance of the springs between the points of the mesh. //la longitud?
 */
-
+using namespace std;
 particleManager pM;
 bool show_test_window = false;
 static bool Play_simulation = true;
@@ -49,7 +49,7 @@ void GUI() {
 		ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 		
 		Second += 1 / ImGui::GetIO().Framerate;
-
+		cout << Second << endl;
 		//TODO
 		//for play & stop
 		ImGui::Checkbox("Play simulation", &Play_simulation);
