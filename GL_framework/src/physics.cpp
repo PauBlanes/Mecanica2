@@ -153,7 +153,12 @@ void PhysicsInit() {
 void PhysicsUpdate(float dt) {
 	if (Play_simulation) {
 		pM.Update(dt);
+		if (Second >= 20) {
+			Second = 0;
+			Reset = true;
+		}
 	}
+
 	if (Reset) {
 		Second = 0;
 		Second += 1 / ImGui::GetIO().Framerate;
