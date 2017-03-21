@@ -20,11 +20,12 @@ TASK
 	 Constant and damping term of direct-link springs (stretch).
 	 Constant and damping term of diagonal-link springs (shear).
 	 Constant and damping term of second-link springs (bend).
-	 Max % of accepted ellongation of links.
-	 Initial Rest distance of the springs between the points of the mesh.
+	 Max % of accepted ellongation of links. //LO DE CORREGIR QUE CAU MOLT A SACO, EL RUBBERY DEFORMATION
+	 Initial Rest distance of the springs between the points of the mesh. //la longitud?
 */
 
 particleManager pM;
+
 
 bool show_test_window = false;
 //esfera
@@ -66,18 +67,16 @@ void GUI() {
 
 
 void PhysicsInit() {
-	//TODO
+	for (int i = 0; i < 18;i++) {
+		for (int j = 0; j < 14;j++) {
+			Particle temp({ -3 + 0.5*j, 5, -3 + i*0.5 }, 1, 0.5, 0.5);
+			pM.particles.push_back(temp);
+		}
+			
+	}
 }
 void PhysicsUpdate(float dt) {
 	//TODO
-	if (SphereCollider) {
-			renderSphere = true;
-			spherePosition.x = SpherePos[0];	spherePosition.y = SpherePos[1];	spherePosition.z = SpherePos[2];
-			Sphere::updateSphere(glm::vec3(SpherePos[0], SpherePos[1], SpherePos[2]), SphereRad);
-		}
-		else {
-			renderSphere = false;
-		}
 }
 void PhysicsCleanup() {
 	//TODO
