@@ -46,6 +46,8 @@ extern float gravity;
 class Particle {
 	friend class particleManager;
 	
+	
+
 	vec3 velocity;
 	vec3 position;
 
@@ -60,7 +62,9 @@ class Particle {
 	
 public:
 	
-	Particle(vec3 pos, float laMassa, float eC, float fC);
+	bool isAgarre;
+
+	Particle(vec3 pos, float laMassa, float eC, float fC, float agarre);
 	
 	void Move(float dt);
 	void DetectWall(vec3 n, int d, float dt);
@@ -80,6 +84,12 @@ public:
 	int wallDs[6];
 	std::vector<Particle> particles;
 	void Update(float dt);
+	
+};
+
+struct Esfera {
+	vec3 position;
+	float radius;
 	
 };
 

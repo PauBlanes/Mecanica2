@@ -1,6 +1,8 @@
 #include <imgui\imgui.h>
 #include <imgui\imgui_impl_glfw_gl3.h>
 #include "myClasses.h"
+#include <time.h>
+#include <stdio.h>
 /*
 TASK
 1. Simulation of the whole mesh using your solver of choice (Euler or Verlet). (4pt)
@@ -25,7 +27,7 @@ TASK
 */
 
 particleManager pM;
-
+Esfera esfera;
 
 bool show_test_window = false;
 void GUI() {
@@ -46,14 +48,57 @@ void GUI() {
 void PhysicsInit() {
 	for (int i = 0; i < 18;i++) {
 		for (int j = 0; j < 14;j++) {
-			Particle temp({ -3 + 0.5*j, 5, -3 + i*0.5 }, 1, 0.5, 0.5);
-			pM.particles.push_back(temp);
-		}
-			
+			if ((i == 0 && j == 0) || (i == 0 && j == 13)) {
+				Particle temp({ -3 + 0.3*j, 8, -3 + i*0.3 }, 1, 0.3, 0.3, true);
+				pM.particles.push_back(temp);
+				partVerts[j * 3 + 0] = -3 + 0.3*j;
+				partVerts[j * 3 + 1] = 8;
+				partVerts[j * 3 + 2] = -3 + i*0.3;
+			}
+			else {
+				Particle temp({ -3 + 0.3*j, 5, -3 + i*0.3 }, 1, 0.3, 0.3, false);
+				pM.particles.push_back(temp);
+			}			
+		}			
 	}
+	
+	//La esfera
+	srand(time(NULL));
+
+	float min = 0.5;
+	float max = 3;
+
+	esfera.radius = min + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (max - min)));
+
+	min = -4 + esfera.radius;
+	max = 4 - esfera.radius;
+
+	esfera.position.x = min + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (max - min)));
+	esfera.position.y = 1;
+	esfera.position.z = min + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (max - min)));
+	Sphere::updateSphere(esfera.position, esfera.radius);
+
+	//els murs
+	pM.wallNormals[0] = { 0,1,0 };
+	pM.wallNormals[1] = { 0,-1,0 };
+	pM.wallNormals[2] = { 1,0,0 };
+	pM.wallNormals[3] = { -1,0,0 };
+	pM.wallNormals[4] = { 0,0,1 };
+	pM.wallNormals[5] = { 0,0,-1 };
+	pM.wallDs[0] = 0;
+	pM.wallDs[1] = 10;
+	pM.wallDs[2] = -5;
+	pM.wallDs[3] = 5;
+	pM.wallDs[4] = 5;
+	pM.wallDs[5] = -5;
 }
 void PhysicsUpdate(float dt) {
-	pM.Update(dt);
+	
+	//detectar esfera
+	for (int i = 0;i < pM.particles.size();i++)
+		pM.particles[i].DetectSphere(esfera.position, esfera.radius, dt);
+	//actualizar pos particles
+		pM.Update(dt);
 	
 }
 void PhysicsCleanup() {
