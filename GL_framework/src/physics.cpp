@@ -53,7 +53,7 @@ void GUI() {
 		ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 		
 		Second += 1 / ImGui::GetIO().Framerate;
-		cout << Second << endl;
+		
 		//TODO
 		//for play & stop
 		ImGui::Checkbox("Play simulation", &Play_simulation);
@@ -104,17 +104,22 @@ float RandomFloat(float min, float max) {
 
 void PhysicsInit() {
 	//particles
+	pM.lHorizontal = 0.3;
+	pM.lVertical = 0.3;
+	pM.ke = kStretch[0];
+	pM.kd = kStretch[1];
+
 	for (int i = 0; i < 18;i++) {
 		for (int j = 0; j < 14;j++) {
 			if ((i == 0 && j == 0) || (i == 0 && j == 13)) {
-				Particle temp({ -3 + 0.3*j, 8, -3 + i*0.3 }, 1, 0.3, 0.3, true);
+				Particle temp({ -3 + pM.lVertical*j, 8, -3 + i*pM.lHorizontal }, 1, 0.3, 0.3, true);
 				pM.particles.push_back(temp);
-				partVerts[j * 3 + 0] = -3 + 0.3*j;
+				partVerts[j * 3 + 0] = -3 + pM.lVertical*j;
 				partVerts[j * 3 + 1] = 8;
-				partVerts[j * 3 + 2] = -3 + i*0.3;
+				partVerts[j * 3 + 2] = -3 + i*pM.lHorizontal;
 			}
 			else {
-				Particle temp({ -3 + 0.3*j, 5, -3 + i*0.3 }, 1, 0.3, 0.3, false);
+				Particle temp({ -3 + pM.lVertical*j, 5, -3 + i*pM.lHorizontal }, 1, 0.3, 0.3, false);
 				pM.particles.push_back(temp);
 			}			
 		}			
@@ -152,8 +157,17 @@ void PhysicsInit() {
 }
 void PhysicsUpdate(float dt) {
 	if (Play_simulation) {
-		pM.Update(dt);
-		if (Second >= 20) {
+		//parametres p
+		pM.ke = kStretch[0];
+		pM.kd = kStretch[1];
+		
+
+		for (int i = 0; i < pM.particles.size();i++) {
+			pM.particles[i].DetectSphere(esfera.position, esfera.radius, dt);
+		}
+		pM.CalculateForces();
+		pM.Update(dt);		
+		if (Second >= 5) {
 			Second = 0;
 			Reset = true;
 		}

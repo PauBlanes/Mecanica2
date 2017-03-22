@@ -47,10 +47,15 @@ extern float gravity;
 class Particle {
 	friend class particleManager;
 	
-	
+	float FsNext;//la força que s'aplica des de la seguent particula
 
 	vec3 velocity;
 	vec3 position;
+
+	vec3 fElasticFromRight = { 0,0,0 };
+	vec3 fElasticFromLeft = { 0,0,0 };
+	vec3 fElasticFromUp = { 0,0,0 };
+	vec3 fElasticFromDown = { 0,0,0 };
 
 	float mass; //hola
 	vec3 force;
@@ -80,12 +85,17 @@ class particleManager {
 public:	
 	float elasticCoef;
 	float frictionCoef;
-		
+	
+	float ke;
+	float kd;
+	float lHorizontal;
+	float lVertical;
+
 	vec3 wallNormals[6];
 	int wallDs[6];
 	std::vector<Particle> particles;
 	void Update(float dt);
-	
+	void CalculateForces();
 };
 
 struct Esfera {
