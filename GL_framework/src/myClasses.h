@@ -47,7 +47,7 @@ extern float gravity;
 class Particle {
 	friend class particleManager;
 	
-	float FsNext;//la força que s'aplica des de la seguent particula
+	//float FsNext;//la força que s'aplica des de la seguent particula
 
 	vec3 velocity;
 	vec3 position;

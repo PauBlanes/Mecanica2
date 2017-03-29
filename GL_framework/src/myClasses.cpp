@@ -4,7 +4,7 @@
 
 int NumPrticles = 0;
 
-float gravity = -0.5f;
+float gravity = -5.f;
 float* partVerts = new float[LilSpheres::maxParticles * 3];
 
 Particle::Particle(vec3 pos, float laMassa, float eC, float fC, float agarre) {
@@ -117,12 +117,52 @@ void particleManager::Update(float dt) {
 
 			partVerts[i * 3 + 0] = particles[i].position.x;
 			partVerts[i * 3 + 1] = particles[i].position.y;
-			partVerts[i * 3 + 2] = particles[i].position.z;
+			partVerts[i * 3 + 2] = particles[i].position.z;		
 		
-		
+	}
+	//correccions de distancia
+	for (int i = 0; i < particles.size(); ++i) {
+		if (i % 14 != 13 && !particles[i].isAgarre) { //si no es de la columna de la dreta
+			if (length(particles[i].position - particles[i + 1].position) > (lHorizontal + lHorizontal*0.15)) { //si estan massa separats
+				if (particles[i+1].isAgarre)
+					particles[i].position -= normalize(particles[i].position - particles[i + 1].position)*(length(particles[i].position - particles[i + 1].position) - (lHorizontal));
+				else {
+					particles[i].position -= normalize(particles[i].position - particles[i + 1].position)*((length(particles[i].position - particles[i + 1].position) - (lHorizontal))/2);
+					particles[i+1].position += normalize(particles[i].position - particles[i + 1].position)*((length(particles[i].position - particles[i + 1].position) - (lHorizontal)) / 2);
+				}				
+			}
+		}
+		if (i % 14 != 0 && !particles[i].isAgarre) { //si no es de la columna de la esquerra
+			if (length(particles[i].position - particles[i - 1].position) > (lHorizontal + lHorizontal*0.15)) { //si estan massa separats
+				if (particles[i - 1].isAgarre)
+					particles[i].position -= normalize(particles[i].position - particles[i - 1].position)*(length(particles[i].position - particles[i - 1].position) - (lHorizontal));
+				else {
+					particles[i].position -= normalize(particles[i].position - particles[i - 1].position)*((length(particles[i].position - particles[i - 1].position) - (lHorizontal)) / 2);
+					particles[i - 1].position += normalize(particles[i].position - particles[i - 1].position)*((length(particles[i].position - particles[i - 1].position) - (lHorizontal)) / 2);
+				}
+			}
+		}
+		if (i < 17 * 14 && !particles[i].isAgarre) { //si no es de la ultima fila
+			if (length(particles[i].position - particles[i + 14].position) > (lVertical + lVertical*0.15)) { //si estan massa separats
+				if (particles[i + 14].isAgarre)
+					particles[i].position += normalize(particles[i].position - particles[i + 14].position)*(length(particles[i].position - particles[i + 14].position) - (lVertical));
+				else {
+					particles[i].position += normalize(particles[i].position - particles[i + 14].position)*((length(particles[i].position - particles[i + 14].position) - (lVertical)) / 2);
+					particles[i + 14].position -= normalize(particles[i].position - particles[i + 14].position)*((length(particles[i].position - particles[i + 14].position) - (lVertical)) / 2);
+				}
+			}
+		}
+		if (i > 13 && !particles[i].isAgarre) { //si no es de la primera fila
+			if (length(particles[i].position - particles[i - 14].position) > (lVertical + lVertical*0.15)) { //si estan massa separats
+				if (particles[i - 14].isAgarre)
+					particles[i].position -= normalize(particles[i].position - particles[i - 14].position)*(length(particles[i].position - particles[i - 14].position) - (lVertical));
+				else {
+					particles[i].position -= normalize(particles[i].position - particles[i - 14].position)*((length(particles[i].position - particles[i - 14].position) - (lVertical)) / 2);
+					particles[i - 14].position += normalize(particles[i].position - particles[i - 14].position)*((length(particles[i].position - particles[i - 14].position) - (lVertical)) / 2);
+				}
+			}
+		}
 	}	
-	
-	
 	
 }
 

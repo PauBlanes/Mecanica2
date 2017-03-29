@@ -37,7 +37,7 @@ float Second;
 //Gravity
 static float GravityAccel[3] = { 0.0f, -9.81f,0.0f };
 //k
-static float kStretch[2] = {10.00,5.00};
+static float kStretch[2] = {500.00,35.00};
 static float kShear[2] = { 1000.00,50.00 };
 static float kBend[2] = { 1000.00,50.00 };
 static float linkDistance;
