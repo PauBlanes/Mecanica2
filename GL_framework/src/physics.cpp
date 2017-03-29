@@ -37,7 +37,7 @@ float Second;
 //Gravity
 static float GravityAccel[3] = { 0.0f, -9.81f,0.0f };
 //k
-static float kStretch[2] = {1000.00,50.00};
+static float kStretch[2] = {10.00,5.00};
 static float kShear[2] = { 1000.00,50.00 };
 static float kBend[2] = { 1000.00,50.00 };
 static float linkDistance;
@@ -154,6 +154,7 @@ void PhysicsInit() {
 	pM.wallDs[3] = 5;
 	pM.wallDs[4] = 5;
 	pM.wallDs[5] = -5;
+
 }
 void PhysicsUpdate(float dt) {
 	if (Play_simulation) {
@@ -165,9 +166,12 @@ void PhysicsUpdate(float dt) {
 		for (int i = 0; i < pM.particles.size();i++) {
 			pM.particles[i].DetectSphere(esfera.position, esfera.radius, dt);
 		}
-		pM.CalculateForces();
-		pM.Update(dt);		
-		if (Second >= 5) {
+		for (int i = 0; i < 10;i++) {
+			pM.CalculateForces();
+			pM.Update(dt/10);
+		}
+		ClothMesh::updateClothMesh(partVerts);
+		if (Second >= resertTime) {
 			Second = 0;
 			Reset = true;
 		}

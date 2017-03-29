@@ -28,18 +28,17 @@ Particle::Particle(vec3 pos, float laMassa, float eC, float fC, float agarre) {
 };
 void Particle::Move(float dt) {
 	
-				
+	if (!isAgarre) {
 		//noves posicions
 		position += velocity*dt;
-		
+
 		//calculem velocitats
-		velocity += dt*(force / mass);	
-	
+		velocity += dt*(force / mass);
+
 		//calculem forces
 		force = fElasticFromLeft + fElasticFromRight + fElasticFromDown + fElasticFromUp;
-		if (!isAgarre)
-			force+=(mass*acc);
-		
+		force += (mass*acc);
+	}
 }
 void Particle::DetectWall(vec3 n, int d, float dt) {
 	
@@ -122,7 +121,7 @@ void particleManager::Update(float dt) {
 		
 		
 	}	
-	ClothMesh::updateClothMesh(partVerts);
+	
 	//LilSpheres::updateParticles(0, particles.size(), partVerts);
 	
 }
@@ -145,12 +144,17 @@ void particleManager::CalculateForces() {
 			particles[i].fElasticFromDown *= (particles[i].position - particles[i + 14].position) / (length(particles[i].position - particles[i + 14].position)); // (...) * P1-P2/||P1-P2||
 		}
 		if (i % 14 != 0) { //si no es de la columna de la esquerra
-			particles[i].fElasticFromLeft = -particles[i - 1].fElasticFromRight;
+			particles[i].fElasticFromLeft = particles[i-1].fElasticFromRight *-1.f;
+			
 		}
 			
 		if (i > 13) { //si no es de la primera fila
-			particles[i].fElasticFromUp = -particles[i - 14].fElasticFromDown;
+			particles[i].fElasticFromUp = particles[i - 14].fElasticFromDown * -1.f;
 		}
+		//std::cout << i << " : " << particles[i].position.x << "," << particles[i].position.y << "," << particles[i].position.z << std::endl;
+		//if ((i+1)%14 != 0)
+			//std::cout << (i+1) << " : " << particles[i+1].position.x << "," << particles[i+1].position.y << "," << particles[i+1].position.z << std::endl;
+		//std::cout << i << " : " << length(particles[i].fElasticFromLeft) << " vs " << length(particles[i].fElasticFromRight) << " vs " << length(particles[i].fElasticFromUp) << " vs " << length(particles[i].fElasticFromDown) << std::endl;
 		
 		//Veïns de shear
 		//if (0 >= i - 14 - 1 < 14 * 18)
