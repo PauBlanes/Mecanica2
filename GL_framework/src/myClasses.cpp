@@ -4,7 +4,7 @@
 
 int NumPrticles = 0;
 
-float gravity = -9.8;
+float gravity = -0.5f;
 float* partVerts = new float[LilSpheres::maxParticles * 3];
 
 Particle::Particle(vec3 pos, float laMassa, float eC, float fC, float agarre) {
@@ -122,7 +122,7 @@ void particleManager::Update(float dt) {
 		
 	}	
 	
-	//LilSpheres::updateParticles(0, particles.size(), partVerts);
+	
 	
 }
 
@@ -151,11 +151,7 @@ void particleManager::CalculateForces() {
 		if (i > 13) { //si no es de la primera fila
 			particles[i].fElasticFromUp = particles[i - 14].fElasticFromDown * -1.f;
 		}
-		//std::cout << i << " : " << particles[i].position.x << "," << particles[i].position.y << "," << particles[i].position.z << std::endl;
-		//if ((i+1)%14 != 0)
-			//std::cout << (i+1) << " : " << particles[i+1].position.x << "," << particles[i+1].position.y << "," << particles[i+1].position.z << std::endl;
-		//std::cout << i << " : " << length(particles[i].fElasticFromLeft) << " vs " << length(particles[i].fElasticFromRight) << " vs " << length(particles[i].fElasticFromUp) << " vs " << length(particles[i].fElasticFromDown) << std::endl;
-		
+			
 		//Veïns de shear
 		//if (0 >= i - 14 - 1 < 14 * 18)
 			

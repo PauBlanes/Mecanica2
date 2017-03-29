@@ -119,7 +119,7 @@ void PhysicsInit() {
 				partVerts[j * 3 + 2] = -3 + i*pM.lHorizontal;
 			}
 			else {
-				Particle temp({ -3 + pM.lVertical*j, 5, -3 + i*pM.lHorizontal }, 1, 0.3, 0.3, false);
+				Particle temp({ -3 + pM.lVertical*j, 8, -3 + i*pM.lHorizontal }, 1, 0.3, 0.3, false);
 				pM.particles.push_back(temp);
 			}			
 		}			
