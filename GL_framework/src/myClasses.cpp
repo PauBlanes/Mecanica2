@@ -140,7 +140,7 @@ void particleManager::CalculateForces() {
 		}
 		if (i < 17 * 14) { //si no es de la ultima fila
 			particles[i].fElasticFromDown = -(ke*(length(particles[i].position - particles[i + 14].position) - lVertical) /* - (ke (||P1-P2|| - L12)) + */
-				+ kd*(particles[i].velocity - particles[i + 14].velocity) * ((particles[i].position - particles[i + 14].position) / (length(particles[i].position - particles[i + 1].position)))); //+ kd(v1-v2)*P1-P2/||P1-P2||)
+				+ kd*(particles[i].velocity - particles[i + 14].velocity) * ((particles[i].position - particles[i + 14].position) / (length(particles[i].position - particles[i + 14].position)))); //+ kd(v1-v2)*P1-P2/||P1-P2||)
 			particles[i].fElasticFromDown *= (particles[i].position - particles[i + 14].position) / (length(particles[i].position - particles[i + 14].position)); // (...) * P1-P2/||P1-P2||
 		}
 		if (i % 14 != 0) { //si no es de la columna de la esquerra
@@ -153,8 +153,58 @@ void particleManager::CalculateForces() {
 		}
 			
 		//Veïns de shear
-		//if (0 >= i - 14 - 1 < 14 * 18)
-			
+		//si no es de la primera fila o la ultima//si no es de la ultima fila//si no es de la columna primera //si no es de la columna ultima
+/*		if (i > 13 && i > 17 * 14 && i % 14 != 0 && i % 14 != 13) {
+			//UP-LEFT
+
+			//UP-RIGHT
+
+			//DOWN-LEFT
+
+			//DOWN-RIGHT
+		}*/
+		if(i % 14 != 13&& i < 17 * 14&& i % 14 != 0&& i > 13){
+			if (i % 14 != 13) { //si no es de la columna de la dreta
+				particles[i].fElasticFromRight = -(ke*(length(particles[i].position - particles[i + 15].position) - lHorizontal) 
+					+ kd*(particles[i].velocity - particles[i + 15].velocity) * ((particles[i].position - particles[i + 15].position) / (length(particles[i].position - particles[i + 15].position))));
+				particles[i].fElasticFromRight *= (particles[i].position - particles[i + 15].position) / (length(particles[i].position - particles[i + 15].position));
+
+			}
+			if (i < 17 * 14) { //si no es de la ultima fila
+				particles[i].fElasticFromDown = -(ke*(length(particles[i].position - particles[i + 13].position) - lVertical)
+					+ kd*(particles[i].velocity - particles[i + 13].velocity) * ((particles[i].position - particles[i + 13].position) / (length(particles[i].position - particles[i + 13].position))));
+				particles[i].fElasticFromDown *= (particles[i].position - particles[i + 13].position) / (length(particles[i].position - particles[i + 13].position));
+			}
+			if (i % 14 != 0) { //si no es de la columna de la esquerra
+				particles[i].fElasticFromLeft = particles[i - 15].fElasticFromRight *-1.f;
+
+			}
+
+			if (i > 13) { //si no es de la primera fila
+				particles[i].fElasticFromUp = particles[i - 13].fElasticFromDown * -1.f;
+			}
+		}
+		if (i == 1) {
+			particles[i].fElasticFromRight = -(ke*(length(particles[i].position - particles[i + 13].position) - lHorizontal)
+				+ kd*(particles[i].velocity - particles[i + 13].velocity) * ((particles[i].position - particles[i + 13].position) / (length(particles[i].position - particles[i + 13].position))));
+			particles[i].fElasticFromRight *= (particles[i].position - particles[i + 13].position) / (length(particles[i].position - particles[i + 13].position));
+		}
+		if (i==14){
+			particles[i].fElasticFromUp = particles[i - 13].fElasticFromDown * -1.f;
+		}
+		if (i == 14 * 17) {
+			particles[i].fElasticFromRight = -(ke*(length(particles[i].position - particles[i + 13].position) - lHorizontal)
+				+ kd*(particles[i].velocity - particles[i + 13].velocity) * ((particles[i].position - particles[i + 13].position) / (length(particles[i].position - particles[i + 13].position))));
+			particles[i].fElasticFromRight *= (particles[i].position - particles[i + 13].position) / (length(particles[i].position - particles[i + 13].position));
+		}
+		if (i == 14*17) {
+			particles[i].fElasticFromUp = particles[i - 13].fElasticFromDown * -1.f;
+		}
+
+		if (i % 14 == 13 && i > 17 * 14 && i % 14 == 0 && i < 13) {
+
+
+		}
 	}
 }
 
