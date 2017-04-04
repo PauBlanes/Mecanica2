@@ -190,10 +190,7 @@ void particleManager::CalculateForces() {
 			
 		if (i > 13) { //si no es de la primera fila
 			particles[i].fElasticFromUp = particles[i - 14].fElasticFromDown * -1.f;
-		}
-			
-		//Veïns de shear
-		//if (0 >= i - 14 - 1 < 14 * 18)
+		}		
 			
 	}
 }
