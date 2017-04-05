@@ -37,7 +37,7 @@ float Second;
 //Gravity
 static float GravityAccel[3] = { 0.0f, -9.81f,0.0f };
 //k
-static float kStretch[2] = {500.00,20.00};
+static float kStretch[2] = {100.0,10.0};
 //static float kShear[2] = { 1000.00,50.00 };
 //static float kBend[2] = { 1000.00,50.00 };
 static float linkDistance = 0.3;
@@ -126,18 +126,20 @@ void PhysicsInit() {
 	
 	//La esfera
 	srand(time(NULL));
+	float init;
+	float min = 2.5;
+	float max = 4;
 
-	float min = 3.5;
-	float max = 5;
-
-	esfera.radius = min + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (max - min)));
+	esfera.radius = min + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (4- 2.5)));
 
 	min = -4 + esfera.radius;
 	max = 4 - esfera.radius;
-
+	
 	esfera.position.x = min + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (max - min)));
 	esfera.position.y = 1;
 	esfera.position.z = min + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (max - min)));
+
+
 	Sphere::updateSphere(esfera.position, esfera.radius);
 
 	//els murs
