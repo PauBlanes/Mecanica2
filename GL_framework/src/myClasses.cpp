@@ -38,7 +38,7 @@ void Particle::Move(float dt) {
 		//calculem forces
 		force = fElasticFromLeft + fElasticFromRight + fElasticFromDown + fElasticFromUp
 				+ fShearUpL + fShearUpR + fShearDownL + fShearDownR
-				+ fBendingR+ fBendingL;
+				+ fBendingR+ fBendingL + fBendingU + fBendingD;
 		force += (mass*acc);
 	}
 }
@@ -218,15 +218,25 @@ void particleManager::CalculateForces() {
 			}
 
 		//blending
-			if (i % 14 == 13) { //si es de la columna de la dreta
+		//Veïns estructurals
+			if (i % 14 < 12) { //si no es de la columna de la dreta
+				particles[i].fBendingR = -(ke*(length(particles[i].position - particles[i + 2].position) - lHorizontal) /* - (ke (||P1-P2|| - L12)) + */
+					+ kd*(particles[i].velocity - particles[i + 2].velocity) * ((particles[i].position - particles[i + 2].position) / (length(particles[i].position - particles[i + 2].position)))); //+ kd(v1-v2)*P1-P2/||P1-P2||)
+				particles[i].fBendingR *= (particles[i].position - particles[i + 2].position) / (length(particles[i].position - particles[i + 2].position)); // (...) * P1-P2/||P1-P2||
+
 			}
-			if (i > 17 * 14) { //si es de la ultima 2 files
+			if (i < 16 * 14) { //si no es de la 2 ultima fila
+				particles[i].fBendingD = -(ke*(length(particles[i].position - particles[i + 28].position) - lVertical) /* - (ke (||P1-P2|| - L12)) + */
+					+ kd*(particles[i].velocity - particles[i + 28].velocity) * ((particles[i].position - particles[i + 28].position) / (length(particles[i].position - particles[i + 28].position)))); //+ kd(v1-v2)*P1-P2/||P1-P2||)
+				particles[i].fBendingD *= (particles[i].position - particles[i + 28].position) / (length(particles[i].position - particles[i + 28].position)); // (...) * P1-P2/||P1-P2||
+			}
+			if (i % 14 > 1) { //si no es de la columna de la esquerra
+				particles[i].fBendingL = particles[i - 2].fBendingR *-1.f;
+
 			}
 
-
-			if (i % 14 == 0) { //si es de la columna de la esquerra
-			}
-			if (i > 13) { //si es de la primera fila
+			if (i > 27) { //si no es de la primera fila
+				particles[i].fBendingU = particles[i - 28].fBendingD * -1.f;
 			}
 
 	}

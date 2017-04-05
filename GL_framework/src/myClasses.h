@@ -64,7 +64,8 @@ class Particle {
 
 	vec3 fBendingR = { 0,0,0 };
 	vec3 fBendingL = { 0,0,0 };
-	
+	vec3 fBendingU = { 0,0,0 };
+	vec3 fBendingD = { 0,0,0 };
 
 	float mass; //hola
 	vec3 force;
