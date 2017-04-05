@@ -125,7 +125,7 @@ void particleManager::Update(float dt) {
 	//correccions de distancia
 	for (int i = 0; i < particles.size(); ++i) {
 		if (i % 14 != 13 && !particles[i].isAgarre) { //si no es de la columna de la dreta
-			if (length(particles[i].position - particles[i + 1].position) > (lHorizontal + lHorizontal*0.15)) { //si estan massa separats
+			if (length(particles[i].position - particles[i + 1].position) > (lHorizontal + lHorizontal*maxSeparation)) { //si estan massa separats
 				if (particles[i+1].isAgarre)
 					particles[i].position -= normalize(particles[i].position - particles[i + 1].position)*(length(particles[i].position - particles[i + 1].position) - (lHorizontal));
 				else {
@@ -135,7 +135,7 @@ void particleManager::Update(float dt) {
 			}
 		}
 		if (i % 14 != 0 && !particles[i].isAgarre) { //si no es de la columna de la esquerra
-			if (length(particles[i].position - particles[i - 1].position) > (lHorizontal + lHorizontal*0.15)) { //si estan massa separats
+			if (length(particles[i].position - particles[i - 1].position) > (lHorizontal + lHorizontal*maxSeparation)) { //si estan massa separats
 				if (particles[i - 1].isAgarre)
 					particles[i].position -= normalize(particles[i].position - particles[i - 1].position)*(length(particles[i].position - particles[i - 1].position) - (lHorizontal));
 				else {
@@ -145,7 +145,7 @@ void particleManager::Update(float dt) {
 			}
 		}
 		if (i < 17 * 14 && !particles[i].isAgarre) { //si no es de la ultima fila
-			if (length(particles[i].position - particles[i + 14].position) > (lVertical + lVertical*0.15)) { //si estan massa separats
+			if (length(particles[i].position - particles[i + 14].position) > (lVertical + lVertical*maxSeparation)) { //si estan massa separats
 				if (particles[i + 14].isAgarre)
 					particles[i].position += normalize(particles[i].position - particles[i + 14].position)*(length(particles[i].position - particles[i + 14].position) - (lVertical));
 				else {
@@ -155,7 +155,7 @@ void particleManager::Update(float dt) {
 			}
 		}
 		if (i > 13 && !particles[i].isAgarre) { //si no es de la primera fila
-			if (length(particles[i].position - particles[i - 14].position) > (lVertical + lVertical*0.15)) { //si estan massa separats
+			if (length(particles[i].position - particles[i - 14].position) > (lVertical + lVertical*maxSeparation)) { //si estan massa separats
 				if (particles[i - 14].isAgarre)
 					particles[i].position -= normalize(particles[i].position - particles[i - 14].position)*(length(particles[i].position - particles[i - 14].position) - (lVertical));
 				else {

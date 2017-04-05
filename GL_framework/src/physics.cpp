@@ -37,10 +37,10 @@ float Second;
 //Gravity
 static float GravityAccel[3] = { 0.0f, -9.81f,0.0f };
 //k
-static float kStretch[2] = {500.00,35.00};
-static float kShear[2] = { 1000.00,50.00 };
-static float kBend[2] = { 1000.00,50.00 };
-static float linkDistance;
+static float kStretch[2] = {500.00,20.00};
+//static float kShear[2] = { 1000.00,50.00 };
+//static float kBend[2] = { 1000.00,50.00 };
+static float linkDistance = 0.3;
 static float MaxElogation;
 static bool Elongation = true;
 //collisions
@@ -48,6 +48,7 @@ static bool collisions = true;
 static bool sphereCollisions = true;
 static float ElasticCoeff=0.5;
 static float FrictionCoeff=0.1;
+static float maxElongation = 0.15;
 void GUI() {
 	{	//FrameRate
 		ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
@@ -73,22 +74,19 @@ void GUI() {
 			//k-bend
 			//ImGui::InputFloat2("k-bend", kBend);
 			//Particles Link Distance
-			ImGui::DragFloat("Particles Link Distance", &linkDistance, 0.5);
+			ImGui::DragFloat("Particles Link Distance", &linkDistance, 0.3);
 			//Max Elongation per cent
-			ImGui::DragFloat("Max Elongation per cent", &resertTime, 0.05);
-			//boolean use Elongation Correction
-			ImGui::Checkbox("Use Elongation Corrections", &Elongation);
+			ImGui::InputFloat("Max Elongation per cent", &maxElongation, 0.15);
+			
 		}
 		//Collisions
 		if (ImGui::CollapsingHeader("Collisions")) {
-			//Use collisions
-			ImGui::Checkbox("Use Collisions", &collisions);
 			//Use Sphere collider
 			ImGui::Checkbox("Use Sphere Collider", &sphereCollisions);
 			//Elastic Coefficion
-			ImGui::DragFloat("Elastic Coefficion", &ElasticCoeff, 0.5);
+			ImGui::DragFloat("Elastic Coefficion", &ElasticCoeff, 0.3);
 			//Friction Coefficion
-			ImGui::DragFloat("Friction Coefficion", &FrictionCoeff, 0.1);
+			ImGui::DragFloat("Friction Coefficion", &FrictionCoeff, 0.3);
 		}
 	}
 	// ImGui test window. Most of the sample code is in ImGui::ShowTestWindow()
@@ -104,22 +102,23 @@ float RandomFloat(float min, float max) {
 
 void PhysicsInit() {
 	//particles
-	pM.lHorizontal = 0.3;
-	pM.lVertical = 0.3;
+	pM.lHorizontal = linkDistance;
+	pM.lVertical = linkDistance;
 	pM.ke = kStretch[0];
 	pM.kd = kStretch[1];
+	pM.maxSeparation = maxElongation;
 
 	for (int i = 0; i < 18;i++) {
 		for (int j = 0; j < 14;j++) {
 			if ((i == 0 && j == 0) || (i == 0 && j == 13)) {
-				Particle temp({ -3 + pM.lVertical*j, 8, -3 + i*pM.lHorizontal }, 1, 0.3, 0.3, true);
+				Particle temp({ -3 + pM.lVertical*j, 8, -3 + i*pM.lHorizontal }, 1, ElasticCoeff, FrictionCoeff, true);
 				pM.particles.push_back(temp);
 				partVerts[j * 3 + 0] = -3 + pM.lVertical*j;
 				partVerts[j * 3 + 1] = 8;
 				partVerts[j * 3 + 2] = -3 + i*pM.lHorizontal;
 			}
 			else {
-				Particle temp({ -3 + pM.lVertical*j, 8, -3 + i*pM.lHorizontal }, 1, 0.3, 0.3, false);
+				Particle temp({ -3 + pM.lVertical*j, 8, -3 + i*pM.lHorizontal }, 1, ElasticCoeff, FrictionCoeff, false);
 				pM.particles.push_back(temp);
 			}			
 		}			
@@ -161,10 +160,13 @@ void PhysicsUpdate(float dt) {
 		//parametres p
 		pM.ke = kStretch[0];
 		pM.kd = kStretch[1];
-		
+		pM.maxSeparation = maxElongation;
 
 		for (int i = 0; i < pM.particles.size();i++) {
-			pM.particles[i].DetectSphere(esfera.position, esfera.radius, dt);
+			pM.elasticCoef = ElasticCoeff;
+			pM.frictionCoef = FrictionCoeff;
+			if (sphereCollisions)
+				pM.particles[i].DetectSphere(esfera.position, esfera.radius, dt);
 		}
 		for (int i = 0; i < 10;i++) {
 			pM.CalculateForces();

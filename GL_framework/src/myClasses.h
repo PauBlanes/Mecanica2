@@ -47,8 +47,6 @@ extern float gravity;
 class Particle {
 	friend class particleManager;
 	
-	//float FsNext;//la força que s'aplica des de la seguent particula
-
 	vec3 velocity;
 	vec3 position;
 
@@ -100,6 +98,7 @@ public:
 	float kd;
 	float lHorizontal;
 	float lVertical;
+	float maxSeparation;
 
 	vec3 wallNormals[6];
 	int wallDs[6];
