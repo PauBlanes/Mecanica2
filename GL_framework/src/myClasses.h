@@ -94,11 +94,17 @@ public:
 	float elasticCoef;
 	float frictionCoef;
 	
-	float ke;
-	float kd;
+	float keStruct;
+	float kdStruct;
+	float keShear;
+	float kdShear;
+	float keBend;
+	float kdBend;
 	float lHorizontal;
 	float lVertical;
 	float maxSeparation;
+
+	float gravity;
 
 	vec3 wallNormals[6];
 	int wallDs[6];
