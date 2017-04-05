@@ -37,7 +37,8 @@ void Particle::Move(float dt) {
 
 		//calculem forces
 		force = fElasticFromLeft + fElasticFromRight + fElasticFromDown + fElasticFromUp
-				+ fShearUpL + fShearUpR + fShearDownL + fShearDownR;
+				+ fShearUpL + fShearUpR + fShearDownL + fShearDownR
+				+ fBendingR+ fBendingL;
 		force += (mass*acc);
 	}
 }
@@ -194,10 +195,7 @@ void particleManager::CalculateForces() {
 		}
 			
 		//Veïns de shear
-		/*
-		}*/
-		//if(i % 14 != 13&& i < 17 * 14&& i % 14 != 0&& i > 13){
-			
+					
 			if (i % 14 != 13&& i < (17 * 14)) { //si no es de la columna de la dreta i si no es de la ultima fila
 
 				particles[i].fShearDownR = -(ke*(length(particles[i].position - particles[i + 15].position) - lHorizontal) 
@@ -218,28 +216,19 @@ void particleManager::CalculateForces() {
 			if (i > 13&& i % 14 != 13) { //si no es de la primera fila I si no es de la columna de la dreta 
 				particles[i].fShearUpR = particles[i - 13].fShearDownL * -1.f;
 			}
-		//}
-/*		if (i == 1) {
-			particles[i].fElasticFromRight = -(ke*(length(particles[i].position - particles[i + 13].position) - lHorizontal)
-				+ kd*(particles[i].velocity - particles[i + 13].velocity) * ((particles[i].position - particles[i + 13].position) / (length(particles[i].position - particles[i + 13].position))));
-			particles[i].fElasticFromRight *= (particles[i].position - particles[i + 13].position) / (length(particles[i].position - particles[i + 13].position));
-		}
-		if (i==14){
-			particles[i].fElasticFromUp = particles[i - 13].fElasticFromDown * -1.f;
-		}
-		if (i == 14 * 17) {
-			particles[i].fElasticFromRight = -(ke*(length(particles[i].position - particles[i + 13].position) - lHorizontal)
-				+ kd*(particles[i].velocity - particles[i + 13].velocity) * ((particles[i].position - particles[i + 13].position) / (length(particles[i].position - particles[i + 13].position))));
-			particles[i].fElasticFromRight *= (particles[i].position - particles[i + 13].position) / (length(particles[i].position - particles[i + 13].position));
-		}
-		if (i == 14*17) {
-			particles[i].fElasticFromUp = particles[i - 13].fElasticFromDown * -1.f;
-		}
 
-		if (i % 14 == 13 && i > 17 * 14 && i % 14 == 0 && i < 13) {
+		//blending
+			if (i % 14 == 13) { //si es de la columna de la dreta
+			}
+			if (i > 17 * 14) { //si es de la ultima 2 files
+			}
 
 
-		}*/
+			if (i % 14 == 0) { //si es de la columna de la esquerra
+			}
+			if (i > 13) { //si es de la primera fila
+			}
+
 	}
 }
 
