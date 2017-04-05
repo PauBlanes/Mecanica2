@@ -111,7 +111,7 @@ void PhysicsInit() {
 	//La esfera
 	srand(time(NULL));
 
-	float min = 1;
+	float min = 2;
 	float max = 4;
 
 	esfera.radius = rand() % (int)(max - min) + min;
@@ -120,7 +120,7 @@ void PhysicsInit() {
 	max = 4 - esfera.radius;
 
 	esfera.position.x = min + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (max - min)));
-	esfera.position.y = 1;
+	esfera.position.y = (min+4) + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (max - min)));
 	esfera.position.z = min + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (max - min)));
 	
 
