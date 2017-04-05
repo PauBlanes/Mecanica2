@@ -36,7 +36,8 @@ void Particle::Move(float dt) {
 		velocity += dt*(force / mass);
 
 		//calculem forces
-		force = fElasticFromLeft + fElasticFromRight + fElasticFromDown + fElasticFromUp;
+		force = fElasticFromLeft + fElasticFromRight + fElasticFromDown + fElasticFromUp
+				+ fShearUpL + fShearUpR + fShearDownL + fShearDownR;
 		force += (mass*acc);
 	}
 }
@@ -49,14 +50,14 @@ void Particle::DetectWall(vec3 n, int d, float dt) {
 	if ((dot(n,position) + d) * (dot(n,posCreuada) + d) <= 0) {
 		
 		//calculem la nova posicio
-		position = posCreuada - 2 * (dot(n, posCreuada) + d)*n;
+		position = posCreuada - (1 + elasticCoef) * (dot(n, posCreuada) + d)*n;
 
 		//calculem la nova velocitat
 		float VperN = dot(velocity, n); // v*n
 		//elasticidad
 		velocity += -(1 + elasticCoef)*(n*VperN);		
 		//friccion
-		vec3 vN = VperN*n;
+		vec3 vN = dot(velocity, n)*n;
 		velocity += -frictionCoef * (velocity - vN); //-u*vT	
 
 	}
@@ -190,8 +191,55 @@ void particleManager::CalculateForces() {
 			
 		if (i > 13) { //si no es de la primera fila
 			particles[i].fElasticFromUp = particles[i - 14].fElasticFromDown * -1.f;
-		}		
+		}
 			
+		//Veïns de shear
+		/*
+		}*/
+		//if(i % 14 != 13&& i < 17 * 14&& i % 14 != 0&& i > 13){
+			
+			if (i % 14 != 13&& i < (17 * 14)) { //si no es de la columna de la dreta i si no es de la ultima fila
+
+				particles[i].fShearDownR = -(ke*(length(particles[i].position - particles[i + 15].position) - lHorizontal) 
+					+ kd*(particles[i].velocity - particles[i + 15].velocity) * ((particles[i].position - particles[i + 15].position) / (length(particles[i].position - particles[i + 15].position))));
+				particles[i].fShearDownR *= (particles[i].position - particles[i + 15].position) / (length(particles[i].position - particles[i + 15].position));
+
+			}
+			if (i < (17 * 14) && i % 14 != 0) { //si no es de la ultima fila i si no es de la columna de la esquerra
+				particles[i].fShearDownL = -(ke*(length(particles[i].position - particles[i + 13].position) - lVertical)
+					+ kd*(particles[i].velocity - particles[i + 13].velocity) * ((particles[i].position - particles[i + 13].position) / (length(particles[i].position - particles[i + 13].position))));
+				particles[i].fShearDownL *= (particles[i].position - particles[i + 13].position) / (length(particles[i].position - particles[i + 13].position));
+			}
+			if (i % 14 != 0 && i > 13) { //si no es de la columna de la esquerra i si no es de la primera fila
+				particles[i].fShearUpL = particles[i - 15].fShearDownR *-1.f;
+
+			}
+
+			if (i > 13&& i % 14 != 13) { //si no es de la primera fila I si no es de la columna de la dreta 
+				particles[i].fShearUpR = particles[i - 13].fShearDownL * -1.f;
+			}
+		//}
+/*		if (i == 1) {
+			particles[i].fElasticFromRight = -(ke*(length(particles[i].position - particles[i + 13].position) - lHorizontal)
+				+ kd*(particles[i].velocity - particles[i + 13].velocity) * ((particles[i].position - particles[i + 13].position) / (length(particles[i].position - particles[i + 13].position))));
+			particles[i].fElasticFromRight *= (particles[i].position - particles[i + 13].position) / (length(particles[i].position - particles[i + 13].position));
+		}
+		if (i==14){
+			particles[i].fElasticFromUp = particles[i - 13].fElasticFromDown * -1.f;
+		}
+		if (i == 14 * 17) {
+			particles[i].fElasticFromRight = -(ke*(length(particles[i].position - particles[i + 13].position) - lHorizontal)
+				+ kd*(particles[i].velocity - particles[i + 13].velocity) * ((particles[i].position - particles[i + 13].position) / (length(particles[i].position - particles[i + 13].position))));
+			particles[i].fElasticFromRight *= (particles[i].position - particles[i + 13].position) / (length(particles[i].position - particles[i + 13].position));
+		}
+		if (i == 14*17) {
+			particles[i].fElasticFromUp = particles[i - 13].fElasticFromDown * -1.f;
+		}
+
+		if (i % 14 == 13 && i > 17 * 14 && i % 14 == 0 && i < 13) {
+
+
+		}*/
 	}
 }
 

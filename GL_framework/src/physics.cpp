@@ -67,11 +67,11 @@ void GUI() {
 		//Spring parameters
 		if (ImGui::CollapsingHeader("Spring parameters")){
 			//k-stretch
-			ImGui::InputFloat2("k-stretch", kStretch);
+			ImGui::InputFloat2("ke-kd", kStretch);
 			//k-shear
-			ImGui::InputFloat2("k-shear", kShear);
+			//ImGui::InputFloat2("k-shear", kShear);
 			//k-bend
-			ImGui::InputFloat2("k-bend", kBend);
+			//ImGui::InputFloat2("k-bend", kBend);
 			//Particles Link Distance
 			ImGui::DragFloat("Particles Link Distance", &linkDistance, 0.5);
 			//Max Elongation per cent
@@ -128,8 +128,8 @@ void PhysicsInit() {
 	//La esfera
 	srand(time(NULL));
 
-	float min = 0.5;
-	float max = 3;
+	float min = 3.5;
+	float max = 5;
 
 	esfera.radius = min + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (max - min)));
 
