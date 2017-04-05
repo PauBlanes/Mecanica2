@@ -107,8 +107,7 @@ void particleManager::Update(float dt) {
 		//colisio murs
 		for (int j = 0; j < 6;j++) {
 			particles[i].DetectWall(wallNormals[j], wallDs[j], dt);
-		}
-		//colisio esfera
+		}		
 
 		particles[i].Move(dt);
 		particles[i].acc.y = gravity;

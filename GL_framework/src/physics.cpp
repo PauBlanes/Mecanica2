@@ -122,7 +122,7 @@ void PhysicsInit() {
 	esfera.position.x = min + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (max - min)));
 	esfera.position.y = 1;
 	esfera.position.z = min + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (max - min)));
-	Sphere::updateSphere(esfera.position, esfera.radius);
+	
 
 	//els murs
 	pM.wallNormals[0] = { 0,1,0 };
@@ -137,6 +137,8 @@ void PhysicsInit() {
 	pM.wallDs[3] = 5;
 	pM.wallDs[4] = 5;
 	pM.wallDs[5] = -5;
+
+	Sphere::updateSphere(esfera.position, esfera.radius);
 
 }
 void PhysicsUpdate(float dt) {
@@ -160,7 +162,13 @@ void PhysicsUpdate(float dt) {
 			pM.CalculateForces();
 			pM.Update(dt/10);
 		}
+		//Pintar
 		ClothMesh::updateClothMesh(partVerts);
+		if (sphereCollisions)
+			renderSphere = true;
+		else
+			renderSphere = false;
+		//Si s'acaba el temps reset
 		if (Second >= resertTime) {
 			Second = 0;
 			Reset = true;
