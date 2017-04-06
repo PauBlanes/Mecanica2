@@ -75,9 +75,6 @@ void GUI() {
 	}
 }
 
-float RandomFloat(float min, float max) {
-	return  (max - min) * ((((float)rand()) / (float)RAND_MAX)) + min;
-}
 
 void PhysicsInit() {
 	//particles
